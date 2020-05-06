@@ -15,7 +15,7 @@ package com.yanchao.blog.constant;
  * @review: 王彦超[wang_yc@suixingpay.com]/Apr 30, 2020 6:16:44 PM
  */
 public final class SystemConstant {
-    
+
     public static final String SYSTEM_NAME = "blog";
 
     private SystemConstant() {

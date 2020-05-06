@@ -2,7 +2,6 @@ package com.yanchao.blog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -25,7 +24,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger2Config {
 
     @Bean
-    public Docket createRestApi() {
+    public static Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
                 // 是否开启 (true 开启 false隐藏。生产环境建议隐藏)
                 .enable(true).select()
@@ -35,7 +34,7 @@ public class Swagger2Config {
                 .paths(PathSelectors.any()).build();
     }
 
-    private ApiInfo apiInfo() {
+    private static ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 // 设置文档标题(API名称)
                 .title("彦超的博客")

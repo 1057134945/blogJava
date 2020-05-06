@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 统一数据返回
- * 
+ *
  * @author: 王彦超[wang_yc@suixingpay.com]
  * @date: Apr 27, 2020 5:33:54 PM
  * @version: V1.0

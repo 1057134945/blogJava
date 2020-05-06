@@ -1,12 +1,11 @@
 package com.yanchao.blog.dao.bas;
 
-import java.util.List;
-
+import com.yanchao.blog.constant.EncryTypeEnum;
+import com.yanchao.blog.po.bas.EncryPO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.yanchao.blog.constant.EncryTypeEnum;
-import com.yanchao.blog.po.bas.EncryPO;
+import java.util.List;
 
 /**
  * 加解密表-Dao

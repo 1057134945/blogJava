@@ -1,13 +1,12 @@
 package com.yanchao.blog.config;
 
+import com.yanchao.blog.vo.ResponseDataVO;
+import com.yanchao.blog.vo.ResponseVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.yanchao.blog.vo.ResponseDataVO;
-import com.yanchao.blog.vo.ResponseVO;
 
 /**
  * 统一异常拦截

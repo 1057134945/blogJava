@@ -1,24 +1,26 @@
 package com.yanchao.blog.util;
 
+import com.yanchao.blog.config.ResultException;
+import com.yanchao.blog.constant.DateFormatConstant;
+import com.yanchao.blog.vo.dic.DicVO;
+import com.yanchao.blog.vo.user.IdentityInfoVO;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-
-import com.yanchao.blog.constant.DateFormatConstant;
-import com.yanchao.blog.constant.SexEnum;
-import com.yanchao.blog.vo.dic.DicVO;
-import com.yanchao.blog.vo.user.IdentityInfoVO;
-
-import lombok.extern.slf4j.Slf4j;
+import static com.yanchao.blog.constant.ErrorEnum.WRONG_ID_NO;
+import static com.yanchao.blog.constant.SexEnum.FEMALE;
+import static com.yanchao.blog.constant.SexEnum.MALE;
 
 /**
  * 身份证相关工具类
- * 
+ *
  * @author: 王彦超[wang_yc@suixingpay.com]
  * @date: Apr 27, 2020 5:12:13 PM
  * @version: V1.0
@@ -27,53 +29,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class IdentityUtils {
 
-    /** 身份证校验码 */
+    /**
+     * 身份证校验码
+     */
     private static final int[] COEFFICIENT_ARRAY = { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 };
-    /** 身份证号的尾数规则 */
+    /**
+     * 身份证号的尾数规则
+     */
     private static final String[] IDENTITY_MANTISSA = { "1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2" };
-    /** 身份证号的正则表达式 */
+    /**
+     * 身份证号的正则表达式
+     */
     private static final String IDENTITY_PATTERN = "^[0-9]{17}[0-9Xx]$";
-    /** 身份证前六位对应地址 */
+    /**
+     * 身份证前六位对应地址
+     */
     private static final Map<String, DicVO> ADDRESS_BY_IDENTITY = new HashMap<>();
-
-    public static boolean check(String idNo) {
-        if (StringUtils.isBlank(idNo) || idNo.length() != 18 || !idNo.matches(IDENTITY_PATTERN)) {
-            return false;
-        }
-
-        return idNo.substring(17)
-                .equalsIgnoreCase(IDENTITY_MANTISSA[(int) (IntStream.range(0, 17)
-                        .map(o -> Character.digit(idNo.toCharArray()[o], 10) * COEFFICIENT_ARRAY[o]).summaryStatistics()
-                        .getSum() % 11)]);
-    }
-
-    public static IdentityInfoVO analysis(String idNo) {
-        if (!check(idNo)) {
-            // TODO 异常
-        }
-
-        Date birthDate = null;
-        try {
-            birthDate = DateUtils.parseDate(idNo.substring(6, 14), DateFormatConstant.NOTHING_BY_DATE);
-        } catch (ParseException e) {
-            log.error("时间格式转换异常", e);
-        }
-
-        IdentityInfoVO idInfo = IdentityInfoVO.builder().birthDate(birthDate)
-                .sex((Integer.parseInt(idNo.substring(16, 17)) % 2 != 0) ? SexEnum.MALE : SexEnum.FEMALE).build();
-        idInfo.setProv(ADDRESS_BY_IDENTITY.get(idNo.substring(0, 2)));
-        if (idInfo.getProv() != null) {
-            idInfo.setCity(idInfo.getProv().getChild().get(idNo.substring(2, 4)));
-            if (idInfo.getCity() != null) {
-                idInfo.setArea(idInfo.getCity().getChild().get(idNo.substring(2, 4)));
-            }
-        }
-        return idInfo;
-    }
-
-    private IdentityUtils() {
-        throw new IllegalStateException("Utility class");
-    }
 
     static {
         ADDRESS_BY_IDENTITY.put("81", DicVO.builder().code("81").name("香港特别行政区").build());
@@ -108,6 +79,41 @@ public final class IdentityUtils {
         heBei(ADDRESS_BY_IDENTITY);
         tianJin(ADDRESS_BY_IDENTITY);
         beiJing(ADDRESS_BY_IDENTITY);
+    }
+
+    private IdentityUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static boolean check(String idNo) {
+        if (StringUtils.isBlank(idNo) || idNo.length() != 18 || !idNo.matches(IDENTITY_PATTERN))
+            return false;
+
+        return idNo.substring(17).equalsIgnoreCase(IDENTITY_MANTISSA[(int) (
+                IntStream.range(0, 17).map(o -> Character.digit(idNo.toCharArray()[o], 10) * COEFFICIENT_ARRAY[o])
+                        .summaryStatistics().getSum() % 11)]);
+    }
+
+    public static IdentityInfoVO analysis(String idNo) {
+        if (!check(idNo))
+            throw new ResultException(WRONG_ID_NO);
+
+        Date birthDate = null;
+        try {
+            birthDate = DateUtils.parseDate(idNo.substring(6, 14), DateFormatConstant.NOTHING_BY_DATE);
+        } catch (ParseException e) {
+            log.error("时间格式转换异常", e);
+        }
+
+        IdentityInfoVO idInfo = IdentityInfoVO.builder().birthDate(birthDate)
+                .sex((Integer.parseInt(idNo.substring(16, 17)) % 2 != 0) ? MALE : FEMALE).build();
+        idInfo.setProv(ADDRESS_BY_IDENTITY.get(idNo.substring(0, 2)));
+        if (idInfo.getProv() != null) {
+            idInfo.setCity(idInfo.getProv().getChild().get(idNo.substring(2, 4)));
+            if (idInfo.getCity() != null)
+                idInfo.setArea(idInfo.getCity().getChild().get(idNo.substring(2, 4)));
+        }
+        return idInfo;
     }
 
     private static void beiJing(Map<String, DicVO> prov) {

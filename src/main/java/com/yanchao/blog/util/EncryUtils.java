@@ -1,17 +1,16 @@
 package com.yanchao.blog.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-import org.apache.commons.lang3.StringUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * 加密
- * 
+ *
  * @author: 王彦超[wang_yc@suixingpay.com]
  * @date: Apr 24, 2020 5:41:13 PM
  * @version: V1.0
@@ -20,9 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class EncryUtils {
 
+    private EncryUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String getMD5(String decry) {
         String encry = null;
-        if (StringUtils.isNotBlank(decry)) {
+        if (StringUtils.isNotBlank(decry))
             try {
                 MessageDigest md5 = MessageDigest.getInstance("MD5");
                 md5.update(decry.getBytes(StandardCharsets.UTF_8));
@@ -35,19 +38,13 @@ public final class EncryUtils {
             } catch (NoSuchAlgorithmException e) {
                 log.error("MD5加密异常", e);
             }
-        }
         return encry;
     }
 
     public static String getBase64(String decry) {
         String encry = null;
-        if (StringUtils.isNotBlank(decry)) {
+        if (StringUtils.isNotBlank(decry))
             encry = Base64.getEncoder().encodeToString(decry.getBytes(StandardCharsets.UTF_8));
-        }
         return encry;
-    }
-
-    private EncryUtils() {
-        throw new IllegalStateException("Utility class");
     }
 }

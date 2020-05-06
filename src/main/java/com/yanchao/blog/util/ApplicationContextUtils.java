@@ -1,13 +1,11 @@
 package com.yanchao.blog.util;
 
-import org.springframework.beans.BeansException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ContextLoader;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Bean容器工具类
@@ -25,10 +23,10 @@ public final class ApplicationContextUtils implements ApplicationContextAware {
 
     /**
      * 通过Class获取Bean.
-     * 
-     * @param <T>
-     * @param clazz
-     * @return
+     *
+     * @param <T>   范型
+     * @param clazz 类类型
+     * @return 类的Bean
      */
     public static <T> T getBean(Class<T> clazz) {
         return getApplicationContext().getBean(clazz);
@@ -36,11 +34,11 @@ public final class ApplicationContextUtils implements ApplicationContextAware {
 
     /**
      * 通过name,以及Class返回指定的Bean
-     * 
-     * @param <T>
-     * @param name
-     * @param clazz
-     * @return
+     *
+     * @param <T>   范型
+     * @param name  Bean名称
+     * @param clazz 类类型
+     * @return 类的Bean
      */
     public static <T> T getBean(String name, Class<T> clazz) {
         return getApplicationContext().getBean(name, clazz);
@@ -48,39 +46,25 @@ public final class ApplicationContextUtils implements ApplicationContextAware {
 
     /**
      * 设置ApplicationContext
-     * 
-     * @param applicationContext
-     * @throws BeansException
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     *
+     * @param context Spring boot 运行参数
      */
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        initContext(applicationContext);
-    }
-
-    /**
-     * 设置ApplicationContext
-     * 
-     * @param applicationContext
-     */
-    public static void setApplicationContextByStatic(ApplicationContext applicationContext) {
-        initContext(applicationContext);
+    public static void setApplicationContextByStatic(ApplicationContext context) {
+        initContext(context);
     }
 
     /**
      * ApplicationContext初始化
-     * 
-     * @param context
+     *
+     * @param context Spring boot 运行参数
      */
     private static synchronized void initContext(ApplicationContext context) {
         log.info("[初始化 contextUtils]");
-        if (applicationContext == null) {
+        if (applicationContext == null)
             applicationContext = context;
-        }
 
-        if (applicationContext == null) {
+        if (applicationContext == null)
             applicationContext = ContextLoader.getCurrentWebApplicationContext();
-        }
 
         if (applicationContext == null) {
             log.info("[初始化 contextUtils 失败]");
@@ -91,13 +75,23 @@ public final class ApplicationContextUtils implements ApplicationContextAware {
 
     /**
      * 获取ApplicationContext
-     * 
-     * @return
+     *
+     * @return Spring boot 运行参数
      */
     private static ApplicationContext getApplicationContext() {
-        if (applicationContext == null) {
+        if (applicationContext == null)
             initContext(null);
-        }
         return applicationContext;
+    }
+
+    /**
+     * 设置ApplicationContext
+     *
+     * @param context Spring boot 运行参数
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext context) {
+        initContext(context);
     }
 }

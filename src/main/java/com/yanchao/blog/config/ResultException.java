@@ -2,7 +2,6 @@ package com.yanchao.blog.config;
 
 import com.yanchao.blog.constant.ErrorEnum;
 import com.yanchao.blog.vo.ResponseDataVO;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,7 +30,7 @@ public class ResultException extends RuntimeException {
         this(error, null);
     }
 
-    public ResultException(ErrorEnum error, ResponseDataVO data) {
+    private ResultException(ErrorEnum error, ResponseDataVO data) {
         this(error.getCode(), error.getMessage(), data);
     }
 }

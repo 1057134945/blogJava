@@ -1,16 +1,15 @@
 package com.yanchao.blog.controller;
 
+import com.yanchao.blog.constant.EncryTypeEnum;
+import com.yanchao.blog.service.EncryService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.yanchao.blog.constant.EncryTypeEnum;
-import com.yanchao.blog.service.EncryService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 加解密调用
@@ -24,10 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 @Api("加解密")
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EncryController {
 
-    @Autowired
-    private EncryService encryService;
+    private final EncryService encryService;
 
     @ApiOperation(value = "加密")
     @GetMapping("encry")

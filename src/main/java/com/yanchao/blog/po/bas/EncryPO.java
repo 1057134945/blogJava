@@ -1,24 +1,14 @@
 package com.yanchao.blog.po.bas;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
 import com.yanchao.blog.constant.EncryTypeEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 加解密表-实体
@@ -44,32 +34,25 @@ public class EncryPO implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = false, updatable = false)
     private Long id;
-
     /** 密文 */
     @Column(name = "encry", nullable = false, updatable = false)
     private String encry;
-
     /** 明文 */
     @Column(name = "decry", nullable = false, updatable = false)
     private String decry;
-
     /** 加密类型 */
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, updatable = false)
     private EncryTypeEnum type;
-
     /** 创建时间 */
     @Column(name = "create_time", nullable = false, updatable = false)
     private Date createTime;
-
     /** 创建人 */
     @Column(name = "creator", nullable = false, updatable = false)
     private String creator;
-
     /** 修改时间 */
     @Column(name = "update_time")
     private Date updateTime;
-
     /** 修改人 */
     @Column(name = "updator")
     private String updator;
